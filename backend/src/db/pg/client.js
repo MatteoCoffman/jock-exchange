@@ -4,6 +4,7 @@
  */
 import { AsyncLocalStorage } from "node:async_hooks";
 import "../../lib/config.js";
+import { logError } from "../../lib/log.js";
 import pg from "pg";
 
 const { Pool, types } = pg;
@@ -39,7 +40,7 @@ export function getPool(opts = {}) {
     max: opts.max ?? 10,
   });
   pool.on("error", (err) => {
-    console.error("Unexpected PostgreSQL pool error", err);
+    logError("pg.pool", err);
   });
   return pool;
 }

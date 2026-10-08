@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { searchPlayerNews } from "../lib/currents.js";
+import { logError, sendRouteError } from "../lib/log.js";
 import {
   getPlayerIdentity,
   getPricedPlayer,
@@ -70,7 +71,7 @@ router.get("/", async (req, res) => {
 
     res.json({ players, total, limit: players.length, offset: Number(offset) || 0 });
   } catch (err) {
-    res.status(err.status || 500).json({ error: err.message });
+    sendRouteError(res, err, "players.list");
   }
 });
 
@@ -82,7 +83,7 @@ router.get("/:id/profile", async (req, res) => {
     const profile = await playerStatsService.buildProfile(roster);
     res.json(profile);
   } catch (err) {
-    console.error("profile error", err);
+    logError("players.profile", err, { status: 502 });
     res.status(502).json({ error: err.message || "Failed to load profile stats" });
   }
 });
@@ -106,8 +107,8 @@ router.get("/:id/news", async (req, res) => {
       articles,
     });
   } catch (err) {
-    console.error("news error", err);
     const status = err.status && Number.isInteger(err.status) ? err.status : 502;
+    logError("players.news", err, { status });
     res.status(status).json({ error: err.message || "Failed to load player news" });
   }
 });
@@ -130,7 +131,7 @@ router.get("/:id", async (req, res) => {
     if (!player) return res.status(404).json({ error: "Player not found" });
     res.json({ player: playerPublic(player), recentTrades: await publicTrades(player.id) });
   } catch (err) {
-    res.status(err.status || 500).json({ error: err.message });
+    sendRouteError(res, err, "players.get");
   }
 });
 

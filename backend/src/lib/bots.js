@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import { v4 as uuidv4 } from "uuid";
 import { BOT_CASH, BOT_COUNT, BOT_INTERVAL_MS, BOTS_ENABLED } from "./config.js";
+import { logError } from "./log.js";
 import {
   getHolding,
   getPricedPlayer,
@@ -217,7 +218,7 @@ export async function startBotMarket() {
         }
       })
       .catch((err) => {
-        console.error("[bot] tick failed", err.message);
+        logError("bot.tick", err);
       })
       .finally(() => {
         ticking = false;

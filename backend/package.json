@@ -22,7 +22,8 @@
     "db:ml:reset": "node scripts/db-ml-reset.js",
     "db:ml:import-raw": "node scripts/ml-import-raw.js",
     "db:ml:promote": "node scripts/ml-promote-core.js",
-    "test:ml": "node --test src/db/ml/sheet.test.js"
+    "test:ml": "node --test src/db/ml/sheet.test.js",
+    "test:log": "node --test src/lib/log.test.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

@@ -3,6 +3,7 @@ import { closePool } from "./db/pg/client.js";
 import { migrateUp } from "./db/pg/migrate.js";
 import { startBotMarket } from "./lib/bots.js";
 import { PORT } from "./lib/config.js";
+import { logError } from "./lib/log.js";
 import { countPricedPlayers } from "./lib/market.js";
 import { playerLibrary } from "./lib/playerLibrary.js";
 
@@ -20,11 +21,11 @@ try {
   app.listen(PORT, () => {
     console.log(`Jock Exchange API listening on http://localhost:${PORT}`);
     startBotMarket().catch((err) => {
-      console.error("Bot market failed to start", err);
+      logError("bot.start", err);
     });
   });
 } catch (err) {
-  console.error(err.message || err);
+  logError("server.start", err);
   await closePool();
   process.exit(1);
 }

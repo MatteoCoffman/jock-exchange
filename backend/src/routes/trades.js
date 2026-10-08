@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { authMiddleware } from "../lib/auth.js";
+import { sendRouteError } from "../lib/log.js";
 import { executeTrade } from "../lib/trading.js";
 
 const router = Router();
@@ -15,7 +16,7 @@ router.post("/", authMiddleware, async (req, res) => {
     });
     res.status(201).json(result);
   } catch (err) {
-    res.status(err.status || 500).json({ error: err.message });
+    sendRouteError(res, err, "trades.post");
   }
 });
 

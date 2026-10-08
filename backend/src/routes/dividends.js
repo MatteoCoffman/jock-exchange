@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { ADMIN_TOKEN } from "../lib/config.js";
+import { sendRouteError } from "../lib/log.js";
 import { setPerformanceScore } from "../lib/market.js";
 import { payDividends, playerPublic } from "../lib/trading.js";
 
@@ -19,7 +20,7 @@ router.post("/pay", adminAuth, async (req, res) => {
     const result = await payDividends(playerId, Number(payoutPerShare));
     res.json(result);
   } catch (err) {
-    res.status(err.status || 500).json({ error: err.message });
+    sendRouteError(res, err, "dividends.pay");
   }
 });
 
@@ -30,7 +31,7 @@ router.post("/score", adminAuth, async (req, res) => {
     if (!player) return res.status(404).json({ error: "Player not found" });
     res.json({ player: playerPublic(player) });
   } catch (err) {
-    res.status(err.status || 500).json({ error: err.message });
+    sendRouteError(res, err, "dividends.score");
   }
 });
 

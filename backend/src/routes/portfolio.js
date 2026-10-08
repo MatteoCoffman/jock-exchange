@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { authMiddleware, publicUser } from "../lib/auth.js";
 import { dayChangePct, equityChartSeries, recordEquitySnapshot } from "../lib/equity.js";
+import { sendRouteError } from "../lib/log.js";
 import {
   getPricedPlayer,
   getUserById,
@@ -55,7 +56,7 @@ router.get("/", authMiddleware, async (req, res) => {
     if (!body) return res.status(404).json({ error: "User not found" });
     res.json(body);
   } catch (err) {
-    res.status(err.status || 500).json({ error: err.message });
+    sendRouteError(res, err, "portfolio.get");
   }
 });
 

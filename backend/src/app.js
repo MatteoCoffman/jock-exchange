@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import { logError } from "./lib/log.js";
 import authRoutes from "./routes/auth.js";
 import playersRoutes from "./routes/players.js";
 import tradesRoutes from "./routes/trades.js";
@@ -35,7 +36,7 @@ export function createApp() {
   app.use("/dividends", dividendsRoutes);
 
   app.use((err, _req, res, _next) => {
-    console.error(err);
+    logError("express", err, { status: 500 });
     res.status(500).json({ error: "Internal server error" });
   });
 

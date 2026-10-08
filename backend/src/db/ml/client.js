@@ -3,6 +3,7 @@
  * Separate from athlete_market_app — never point ML_DATABASE_URL at the app DB.
  */
 import "../../lib/config.js";
+import { logError } from "../../lib/log.js";
 import pg from "pg";
 
 const { Pool } = pg;
@@ -52,7 +53,7 @@ export function getPool(opts = {}) {
     max: opts.max ?? 5,
   });
   pool.on("error", (err) => {
-    console.error("Unexpected ML PostgreSQL pool error", err);
+    logError("ml.pool", err);
   });
   return pool;
 }
